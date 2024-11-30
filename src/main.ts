@@ -1,5 +1,3 @@
-// src/main.ts
-
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
@@ -7,15 +5,13 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Swagger configuration
-  const config = new DocumentBuilder()
-    .setTitle('User API')
-    .setDescription('User management API with CRUD operations')
-    .setVersion('1.0')
-    .addTag('users')
+  const options = new DocumentBuilder()
+    .setTitle('API Documentation')
+    .setDescription('The API description')
+    .setVersion('1.0') 
     .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);  // Set up Swagger at /api
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup('api', app, document);
 
   await app.listen(3000);
 }
