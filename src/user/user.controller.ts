@@ -6,11 +6,13 @@ import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiConsumes } from '@nestj
 import { UserDto, UserDto1 } from './dto/user.dto';  // Import the UserDto for Swagger
 import { CreateUserResponseDto, DeleteUserResponseDto } from './dto/create-user-response.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { LoginDto } from '../auth/dto/login.dto';
 
 @ApiTags('users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService,
+  ) {}
 
   @Post()
   @ApiOperation({ summary: 'Create a new user' })
@@ -82,4 +84,18 @@ export class UserController {
       message: 'User deleted successfully.',
     };
   }
+
+  // @Post('login')
+  // @ApiOperation({ summary: 'User login' })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'User logged in successfully.',
+  // })
+  // @ApiResponse({
+  //   status: 401,
+  //   description: 'Invalid credentials.',
+  // })
+  // async login(@Body() loginDto: LoginDto) {
+  //   return this.usersService.login(loginDto.email,loginDto.password);
+  // }
 }

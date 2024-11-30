@@ -3,8 +3,9 @@
 import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { UserDto } from 'src/user/dto/user.dto';
-import { LoginResponseDto } from './dto/login-response.dto';  // The DTO for the login response
+// import { LoginDto } from './dto/login.dto';  // DTO for login request
+import { LoginDto } from './dto/login.dto';
+import { LoginResponseDto } from './dto/login-response.dto';  // DTO for login response
 
 @ApiTags('auth')
 @Controller('auth')
@@ -13,7 +14,7 @@ export class AuthController {
 
   @Post('login')
   @ApiOperation({ summary: 'User login' })
-  @ApiBody({ type: UserDto, description: 'User credentials (email and password)' })
+  @ApiBody({ type: LoginDto, description: 'User credentials (email and password)' })
   @ApiResponse({
     status: 200,
     description: 'Login successful',
@@ -23,9 +24,9 @@ export class AuthController {
     status: 401,
     description: 'Invalid credentials',
   })
-  async login(@Body() userDto: UserDto): Promise<LoginResponseDto> {
-    const user = await this.authService.validateUser(userDto.email, userDto.password);
-    
+  async login(@Body() loginDto: LoginDto): Promise<LoginResponseDto> {
+    const user = await this.authService.validateUser(loginDto.email, loginDto.password);
+
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
