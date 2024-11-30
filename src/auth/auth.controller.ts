@@ -1,19 +1,40 @@
-import { Controller, Get, Query } from '@nestjs/common';
-import { AuthService } from './auth.service';
+// src/auth/auth.controller.ts
 
+import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+import { UserDto } from 'src/user/dto/user.dto';
+import { LoginResponseDto } from './dto/login-response.dto';  // The DTO for the login response
+
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
-  // Use GET for signin, passing credentials as query params (e.g. /signin?username=user&password=pass)
-  @Get('signin')
-  signin(@Query('username') username: string, @Query('password') password: string) {
-    return this.authService.signin(); // Simple message
-  }
+  @Post('login')
+  @ApiOperation({ summary: 'User login' })
+  @ApiBody({ type: UserDto, description: 'User credentials (email and password)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Login successful',
+    type: LoginResponseDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Invalid credentials',
+  })
+  async login(@Body() userDto: UserDto): Promise<LoginResponseDto> {
+    const user = await this.authService.validateUser(userDto.email, userDto.password);
+    
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
 
-  // Use GET for signup, passing user data as query params (e.g. /signup?username=user&password=pass)
-  @Get('signup')
-  signup(@Query('username') username: string, @Query('password') password: string) {
-    return this.authService.signup(); // Simple message
+    const { accessToken } = await this.authService.login(user);
+
+    return {
+      accessToken,
+      message: 'Login successful',
+    };
   }
 }

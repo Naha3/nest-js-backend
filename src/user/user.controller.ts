@@ -1,10 +1,11 @@
 // src/users/user.controller.ts
 
-import { Controller, Post, Get, Param, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, Put, Delete, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-import { UserDto } from './dto/user.dto';  // Import the UserDto for Swagger
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { UserDto, UserDto1 } from './dto/user.dto';  // Import the UserDto for Swagger
 import { CreateUserResponseDto, DeleteUserResponseDto } from './dto/create-user-response.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('users')
 @Controller('users')
@@ -13,23 +14,31 @@ export class UserController {
 
   @Post()
   @ApiOperation({ summary: 'Create a new user' })
+  @ApiConsumes('multipart/form-data') // Specify the content type for multipart/form-data
   @ApiBody({
-    description: 'Create a new user (JSON body)',
-    type: UserDto,
+    description: 'Create a new user (Form Data)',
+    type: UserDto1,
     required: true,
   })
   @ApiResponse({
-status: 201,
+    status: 201,
     description: 'User created successfully.',
-    type: CreateUserResponseDto,  // Return CreateUserResponseDto instead of UserDto
+    type: CreateUserResponseDto,
   })
-  async create(@Body() userData: Partial<UserDto>): Promise<CreateUserResponseDto> {
-    // Await the result of the user creation
-    const createdUser = await this.usersService.create(userData as UserDto);  // Await the promise
+  @UseInterceptors(FileInterceptor('file'))  // Handle the file upload with 'file' as the key
+  async create(
+    @Body() userData: UserDto1,    // Use UserDto1 here for proper request body structure
+    @UploadedFile() file: Express.Multer.File, // File upload
+  ): Promise<CreateUserResponseDto> {
+    // Process the uploaded file (optional) or save it
+    console.log(file);  // You can process the file here, e.g., save it to a directory
 
-    // Return the response with both user data and a message
+    // Create the user using the data from the form (userData)
+    const createdUser = await this.usersService.create(userData);
+
+    // Return the response
     return {
-      user: createdUser,  // The created user
+      user: createdUser,
       message: 'User created successfully.',
     };
   }
@@ -61,19 +70,16 @@ status: 201,
   @ApiResponse({
     status: 200,
     description: 'User deleted successfully.',
-    // type: DeleteUserResponseDto,  // Use the DeleteUserResponseDto as the response type
+    type: DeleteUserResponseDto,  // Use DeleteUserResponseDto as the response type
   })
   async delete(@Param('id') id: string): Promise<DeleteUserResponseDto> {
-    const user = await this.usersService.delete(id);  // Assuming delete returns the deleted user
-    if (user) {
-      return {
-        user,
-        message: 'User deleted successfully.',
-      };
+    const user = await this.usersService.delete(id);  // Delete the user by ID
+    if (!user) {
+      return { message: 'User not found or already deleted.' };  // Handle non-existing users
     }
     return {
-      user: null,  // If the user does not exist, return null for user
-      message: 'User not found.',
+      user,  // Return the deleted user data (if needed)
+      message: 'User deleted successfully.',
     };
   }
 }
