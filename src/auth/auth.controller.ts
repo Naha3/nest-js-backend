@@ -1,11 +1,8 @@
-// src/auth/auth.controller.ts
-
 import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
-// import { LoginDto } from './dto/login.dto';  // DTO for login request
 import { LoginDto } from './dto/login.dto';
-import { LoginResponseDto } from './dto/login-response.dto';  // DTO for login response
+import { LoginResponseDto } from './dto/login-response.dto';  
 
 @ApiTags('auth')
 @Controller('auth')

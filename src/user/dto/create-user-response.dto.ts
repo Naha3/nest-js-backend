@@ -1,9 +1,5 @@
-// src/user/dto/create-user-response.dto.ts
-
 import { ApiProperty } from '@nestjs/swagger';
-import { UserDto } from './user.dto';  // Import the UserDto
-
-// Create user response DTO
+import { UserDto } from './user.dto'; 
 export class CreateUserResponseDto {
   @ApiProperty({
     description: 'The user data created.',
@@ -18,12 +14,11 @@ export class CreateUserResponseDto {
   message: string;
 }
 
-// Delete user response DTO
 export class DeleteUserResponseDto {
   @ApiProperty({
     description: 'The user data that was deleted.',
     type: UserDto,
-    required: false, // This may be null if the user does not exist
+    required: false, 
   })
   user?: UserDto;
 

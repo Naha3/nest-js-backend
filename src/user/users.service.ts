@@ -1,5 +1,3 @@
-// src/users/users.service.ts
-
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose'; 
 import { Model } from 'mongoose'; 
@@ -14,31 +12,28 @@ export class UsersService {
   constructor(@InjectModel('User') private readonly userModel: Model<UserDocument>,
   private readonly jwtService: JwtService,) {}  
   
-  // Create a new user
+
   async create(userData: UserDto): Promise<UserDto> {
-    console.log('Received data:', userData);  // Log the incoming data
-    const createdUser = new this.userModel(userData);  // Create a new user instance
-    return createdUser.save();  // Save the user to MongoDB
+    console.log('Received data:', userData);
+    const createdUser = new this.userModel(userData);  
+    return createdUser.save();  
   }
 
-  // Find a user by email
+
   async findByEmail(email: string): Promise<UserDto | null> {
-    return this.userModel.findOne({ email }).exec();  // Find a user by email
+    return this.userModel.findOne({ email }).exec(); 
   }
 
-  // Get all users
   async findAll(): Promise<UserDto[]> {
-    return this.userModel.find().exec();  // Retrieve all users
+    return this.userModel.find().exec(); 
   }
 
-  // Update user by ID
   async update(id: string, userData: Partial<UserDto>): Promise<UserDto | null> {
-    return this.userModel.findByIdAndUpdate(id, userData, { new: true }).exec();  // Update user by ID
+    return this.userModel.findByIdAndUpdate(id, userData, { new: true }).exec();  
   }
 
-  // Delete user by ID
   async delete(id: string): Promise<UserDto | null> {
-    return this.userModel.findByIdAndDelete(id).exec();  // Delete user by ID
+    return this.userModel.findByIdAndDelete(id).exec();  
   }
 
   async login(email: string, password: string): Promise<any> {

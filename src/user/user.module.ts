@@ -1,5 +1,3 @@
-// src/users/user.module.ts
-
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UsersService } from './users.service';
@@ -11,7 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 @Module({
     imports: [MongooseModule.forFeature([{ name: 'User', schema: UserSchema }])],
     providers: [UserModel, UsersService, JwtService],
-    controllers: [UserController],  // Register the controller here
-    exports: [UserModel, UsersService], // Export services for other modules if needed
+    controllers: [UserController],  
+    exports: [UserModel, UsersService], 
   })
 export class UserModule {}

@@ -1,5 +1,3 @@
-// src/users/dto/user.dto.ts
-
 import { ApiProperty } from '@nestjs/swagger';
 
 export class UserDto {
