@@ -1,4 +1,6 @@
-import { Schema, Document, model } from 'mongoose'; 
+// src/user/user.schema.ts
+import { Schema, Document, model } from 'mongoose';
+
 export interface User extends Document {
   name: string;
   email: string;
@@ -17,4 +19,6 @@ export const UserSchema = new Schema<User>({
   timestamps: true, 
 });
 
-export type UserDocument = User & Document;  
+export type UserDocument = User & Document;  // Use 'UserDocument' to type the Mongoose model
+
+export const User = model<UserDocument>('User', UserSchema);

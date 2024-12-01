@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { UserDto } from './user.dto'; 
+import { UserDto } from './user.dto';
+
 export class CreateUserResponseDto {
   @ApiProperty({
     description: 'The user data created.',
@@ -18,7 +19,7 @@ export class DeleteUserResponseDto {
   @ApiProperty({
     description: 'The user data that was deleted.',
     type: UserDto,
-    required: false, 
+    required: false,
   })
   user?: UserDto;
 

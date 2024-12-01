@@ -8,39 +8,29 @@ import { LoginDto } from '../auth/dto/login.dto';
 
 @ApiTags('users')
 @Controller('users')
+
 export class UserController {
   constructor(private readonly usersService: UsersService,
-  ) {}
+  ) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new user' })
-  @ApiConsumes('multipart/form-data') 
-  @ApiBody({
-    description: 'Create a new user (Form Data)',
-    type: UserDto1,
-    required: true,
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'User created successfully.',
-    type: CreateUserResponseDto,
-  })
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({ description: 'Create a new user (Form Data)', type: UserDto1, required: true })
+  @ApiResponse({ status: 201, description: 'User created successfully.', type: CreateUserResponseDto })
   @UseInterceptors(FileInterceptor('file'))
-  async create(
-    @Body() userData: UserDto1,   
-    @UploadedFile() file: Express.Multer.File, 
-  ): Promise<CreateUserResponseDto> {
-    console.log(file); 
+  async create(@Body() userData: UserDto1, @UploadedFile() file: Express.Multer.File): Promise<CreateUserResponseDto> {
+    console.log(file);  // Handle file if necessary
     const createdUser = await this.usersService.create(userData);
     return {
-      user: createdUser,
+      user: createdUser,  // This will be of type UserDto without the password
       message: 'User created successfully.',
     };
   }
 
   @Get()
   @ApiOperation({ summary: 'Get all users' })
-  @ApiResponse({ status: 200, description: 'List of users.', type: [UserDto] }) 
+  @ApiResponse({ status: 200, description: 'List of users.', type: [UserDto] })
   async findAll(): Promise<UserDto[]> {
     return this.usersService.findAll();
   }
@@ -65,30 +55,16 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'User deleted successfully.',
-    type: DeleteUserResponseDto,  
+    type: DeleteUserResponseDto,
   })
   async delete(@Param('id') id: string): Promise<DeleteUserResponseDto> {
-    const user = await this.usersService.delete(id);  
+    const user = await this.usersService.delete(id);
     if (!user) {
-      return { message: 'User not found or already deleted.' }; 
+      return { message: 'User not found or already deleted.' };
     }
     return {
-      user,  
+      user,
       message: 'User deleted successfully.',
     };
   }
-
-  // @Post('login')
-  // @ApiOperation({ summary: 'User login' })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'User logged in successfully.',
-  // })
-  // @ApiResponse({
-  //   status: 401,
-  //   description: 'Invalid credentials.',
-  // })
-  // async login(@Body() loginDto: LoginDto) {
-  //   return this.usersService.login(loginDto.email,loginDto.password);
-  // }
 }
