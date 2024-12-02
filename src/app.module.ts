@@ -10,10 +10,10 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
     UserModule,
     MongooseModule.forRoot(
-      'mongodb+srv://naha1691anlm:naha119131@cluster0.v0zmo.mongodb.net/myDatabase?retryWrites=true&w=majority&appName=Cluster0'
+      'mongodb+srv://naha1691anlm:naha119131@cluster0.v0zmo.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
     ),
   ],
-  controllers: [AppController],
+  controllers: [AppController, ],
   providers: [AppService],
 })
 export class AppModule {}
