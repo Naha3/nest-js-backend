@@ -11,30 +11,17 @@ export class UsersService {
 
   constructor(@InjectModel('User') private readonly userModel: Model<UserDocument>,
   private readonly jwtService: JwtService,) {}  
- // Create a new user
- async create(userData: UserDto): Promise<UserDto> {
-  // Hash the password before saving
-  const saltRounds = 10;
-  const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
 
-  // Create a new user with hashed password
-  const newUser = new this.userModel({
-    ...userData,
-    password: hashedPassword,
-    createdAt: new Date(),
-  });
-
-  // Save the user to the database
-  const user = await newUser.save();
-
-  // Convert Mongoose document to plain object and exclude the password
-  const userObject = user.toObject();
-  const { password, ...result } = userObject; // Remove password from the result
-
-  // Return the user without the password (matching UserDto structure)
-  return result as UserDto;
-}
-
+  async create(userData: UserDto): Promise<UserDto> {
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
+    const newUser = new this.userModel({  ...userData, password: hashedPassword, createdAt: new Date() });
+    const user = await newUser.save();    
+    const userObject = user.toObject();
+    const { password, ...result } = userObject; 
+    return result as UserDto;
+  }
+  
   async findByEmail(email: string): Promise<UserDto | null> {
     return this.userModel.findOne({ email }).exec(); 
   }

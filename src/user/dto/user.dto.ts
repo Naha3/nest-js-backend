@@ -20,8 +20,10 @@ export class UserDto {
   @IsBoolean()
   isActive: boolean;
 
-  @ApiProperty({ description: 'User creation timestamp', example: '2023-11-29T00:00:00.000Z' })
-  createdAt: Date;
+    @ApiProperty({
+      description: 'The user creation date, formatted as MM/DD/YYYY, hh:mm:ss AM/PM.',
+      example: '12/02/2024, 12:17:50 PM',
+    }) createdAt: Date;
 }
 
 export class UserDto1 {
@@ -41,6 +43,6 @@ export class UserDto1 {
   @ApiProperty({ description: 'Is the user active?', default: true })
   isActive: boolean;
 
-  @ApiProperty({ description: 'User creation timestamp', example: '2023-11-29T00:00:00.000Z' })
+  @ApiProperty({ description: 'User creation timestamp', example: '2023-11-29, 00:00:00' })
   createdAt: Date;
 }

@@ -20,10 +20,10 @@ export class UserController {
   @ApiResponse({ status: 201, description: 'User created successfully.', type: CreateUserResponseDto })
   @UseInterceptors(FileInterceptor('file'))
   async create(@Body() userData: UserDto1, @UploadedFile() file: Express.Multer.File): Promise<CreateUserResponseDto> {
-    console.log(file);  // Handle file if necessary
+    console.log(file);  
     const createdUser = await this.usersService.create(userData);
     return {
-      user: createdUser,  // This will be of type UserDto without the password
+      user: createdUser, 
       message: 'User created successfully.',
     };
   }
